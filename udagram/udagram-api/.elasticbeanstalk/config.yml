@@ -1,12 +1,10 @@
 branch-defaults:
   default:
-    environment: Project3-env
-environment-defaults:
-  Project3-env:
-    branch: null
-    repository: null
+    environment: null
+    group_suffix: null
 global:
-  application_name: Project3
+  application_name: udagram-api
+  branch: null
   default_ec2_keyname: null
   default_platform: Node.js 14 running on 64bit Amazon Linux 2
   default_region: us-east-1
@@ -15,5 +13,6 @@ global:
   platform_name: null
   platform_version: null
   profile: null
-  sc: git
+  repository: null
+  sc: null
   workspace_type: Application
