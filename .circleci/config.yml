@@ -1,49 +1,50 @@
 version: 2.1
 orbs:
+# orgs contain basc recipes and reproducible actions (install node, aws, etc.)
   node: circleci/node@5.0.2
   eb: circleci/aws-elastic-beanstalk@2.0.1
   aws-cli: circleci/aws-cli@3.1.1
+  # the jobs we want to run and order in the workflows sections
 jobs:
   build:
     docker:
+    # the base image can run most needed actions with orbs
       - image: "cimg/node:14.15"
     steps:
+    # install node and checkout code
       - node/install:
           node-version: '14.15'         
       - checkout
+      # Use root level package.json to install dependencies in the Front-End app
       - run:
           name: Install Front-End Dependencies
+          # Install dependencies in the the Front-End    
           command: |
-            echo "NODE --version" 
-            echo $(node --version)
-            echo "NPM --version" 
-            echo $(npm --version)
             npm run frontend:install
       - run:
           name: Install API Dependencies
+          # Install dependencies in the the Back-End
           command: |
-            echo "NODE --version" 
-            echo $(node --version)
-            echo "NPM --version" 
-            echo $(npm --version)
             npm run api:install
       - run:
           name: Front-End Lint
+          # lint Front-End code
           command: |
             npm run frontend:lint
       - run:
           name: Front-End Build
+          # Build the the Front-End
           command: |
             npm run frontend:build    
       - run:
           name: API Build
+          # Build the the Back-End
           command: |
             npm run api:build
-  # deploy step will run only after manual approval
+  # deploy will start when approved manually (controlled from workflow)
   deploy:
     docker:
       - image: "cimg/base:stable"
-      # more setup needed for aws, node, elastic beanstalk
     steps:
       - node/install:
           node-version: '14.15' 
@@ -52,14 +53,16 @@ jobs:
       - checkout
       - run:
           name: Deploy App
-          # TODO: Install, build, deploy in both apps
+          # deploy both Front-End and Back-End
           command: |
             npm run deploy
-            
+# Orchestrate our job run sequence 
 workflows:
   udagram:
     jobs:
+      # build will start automatically
       - build
+      # hold will waite manual approval
       - hold:
           filters:
             branches:
@@ -68,6 +71,7 @@ workflows:
           type: approval
           requires:
             - build
+      # this means deploy will waite for hold
       - deploy:
           requires:
             - hold
