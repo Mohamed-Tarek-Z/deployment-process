@@ -73,3 +73,9 @@ The e2e tests are using Protractor and Jasmine.
 ## CircleCI
 ![CircleCI Env vars](screenshot/CirEnv.PNG)
 ![CircleCI Pipline](screenshot/piplins.PNG)
+
+
+
+## Diagrams 
+![Pipeline diagram](screenshot/pip%20dia.png)
+![Architecture Pipline](screenshot/dia.PNG)
